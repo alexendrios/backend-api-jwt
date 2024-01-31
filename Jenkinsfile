@@ -1,11 +1,10 @@
 pipeline {
     agent {
         docker {
-            image 'node:14' // Use a Node.js image or any other image you need
-            args '-u root' // Optional: Run as root if additional dependencies need installation
+            image 'node:14'
         }
     }
-
+    
     stages {
         stage('Checkout') {
             steps {
@@ -13,30 +12,34 @@ pipeline {
             }
         }
 
-        stage('Install dependencies') {
+        stage('Build') {
             steps {
+                echo 'Building or Resolving Dependencies'
                 sh 'npm install'
             }
         }
 
-        stage('Run tests') {
+        stage('Test') {
             steps {
+                echo 'Running regression tests'
                 sh 'npm test'
             }
-        }
+            post {
+                always {
+                    // Publish JUnit test results
+                    junit '**/test-report.html'
 
-        // Add more stages as needed
-
-        stage('Cleanup') {
-            steps {
-                sh 'npm clean' // Optional: Add cleanup steps if needed
+                    // Publish Cobertura coverage report
+                    publishCobertura coberturaReportFile: '**/coverage/lcov-report/index.html'
+                }
             }
         }
-    }
 
-    post {
-        always {
-            // Optional: Add cleanup steps that should always run
+        stage('Deploy') {
+            steps {
+                echo 'WebApp is Ready'
+                // Add deploy steps as needed
+            }
         }
     }
 }
