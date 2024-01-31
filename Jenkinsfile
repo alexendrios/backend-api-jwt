@@ -1,44 +1,27 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:14'
-        }
+    agent any
+     tools { 
+        nodejs "node 18.17.0" 
     }
     
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/gfavarelli/MeuAppCI.git']]])
             }
         }
-
+        
         stage('Build') {
             steps {
-                echo 'Building or Resolving Dependencies'
-                sh 'npm install'
+                bat "node -v"
+                bat 'npm install'
+                bat 'npm run build'
             }
         }
-
-        stage('Test') {
+        
+        stage('Run Unit Tests') {
             steps {
-                echo 'Running regression tests'
-                sh 'npm test'
-            }
-            post {
-                always {
-                    // Publish JUnit test results
-                    junit '**/test-report.html'
-
-                    // Publish Cobertura coverage report
-                    publishCobertura coberturaReportFile: '**/coverage/lcov-report/index.html'
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'WebApp is Ready'
-                // Add deploy steps as needed
+                bat 'npm run test'
             }
         }
     }
