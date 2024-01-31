@@ -15,13 +15,12 @@ pipeline {
             steps {
                 sh "node -v"
                 sh 'npm install'
-                sh 'npm run build'
             }
         }
         
         stage('Run Unit Tests') {
             steps {
-                sh 'npm run test'
+                sh 'npm test'
             }
         }
     }
