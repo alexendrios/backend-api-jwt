@@ -1,27 +1,27 @@
 pipeline {
     agent any
      tools { 
-        nodejs "node 18.17.0" 
+        nodejs "node 18.16.0" 
     }
     
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/gfavarelli/MeuAppCI.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/alexendrios/backend-api-jwt.git']]])
             }
         }
         
         stage('Build') {
             steps {
-                bat "node -v"
-                bat 'npm install'
-                bat 'npm run build'
+                sh "node -v"
+                sh 'npm install'
+                sh 'npm run build'
             }
         }
         
         stage('Run Unit Tests') {
             steps {
-                bat 'npm run test'
+                sh 'npm run test'
             }
         }
     }
