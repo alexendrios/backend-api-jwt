@@ -1,9 +1,10 @@
 pipeline {
-    agent any
-     tools { 
-        nodejs "node 18.16.0" 
+     agent {
+        docker {
+            image 'node:18.16.0' 
+            args '-u root'  
+        }
     }
-    
     stages {
         stage('Checkout') {
             steps {
