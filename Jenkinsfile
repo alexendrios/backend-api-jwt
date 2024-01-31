@@ -1,5 +1,5 @@
 pipeline {
-    agent 
+    agent any 
      tools { 
         nodejs "node 18.16.0" 
     }
@@ -33,6 +33,7 @@ pipeline {
             }
         }
     }
+    
      post {
         always {
             // Limpeza ou ações pós-build
