@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'node:14' 
-            args '-u root'  
+            image 'node:14' // Use a Node.js image or any other image you need
+            args '-u root' // Optional: Run as root if additional dependencies need installation
         }
     }
 
@@ -19,37 +19,24 @@ pipeline {
             }
         }
 
-        stage('Run unit tests') {
+        stage('Run tests') {
             steps {
                 sh 'npm test'
             }
         }
 
-        stage('Generate coverage report') {
-            steps {
-                sh 'npm run coverage'
-            }
-        }
+        // Add more stages as needed
 
-        stage('Start Application') {
+        stage('Cleanup') {
             steps {
-                sh 'npm start &'
-                sleep 10 
-            }
-        }
-
-        stage('Publish test results and coverage') {
-            steps {
-                
-                 unit '**/test-report.html'
-                publishCobertura coberturaReportFile: '**/coverage/lcov-report/index.html'
+                sh 'npm clean' // Optional: Add cleanup steps if needed
             }
         }
     }
 
     post {
         always {
-            cleanWs() 
+            // Optional: Add cleanup steps that should always run
         }
     }
 }
