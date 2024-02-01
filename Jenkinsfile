@@ -1,40 +1,65 @@
 pipeline {
-    agent any 
-     tools { 
-        nodejs "node 18.16.0" 
+    agent any
+
+    tools {
+        nodejs "node 18.16.0"
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/alexendrios/backend-api-jwt.git']]])
             }
         }
-        
+
         stage('Build') {
             steps {
-                sh "node -v"
+                script {
+                    // Use o Node.js definido no bloco tools
+                    def nodejsHome = tool 'node 18.16.0'
+                    env.PATH = "${nodejsHome}/bin:${env.PATH}"
+                }
+
+                // Verifique a versão do Node.js
+                sh 'node -v'
+
+                // Instale dependências do Node.js
                 sh 'npm install'
             }
         }
-        
+
         stage('Run Unit Tests') {
             steps {
-                sh 'npm test'
+                // Execute testes usando o Node.js e npm do bloco tools
+                script {
+                    def nodejsHome = tool 'node 18.16.0'
+                    env.PATH = "${nodejsHome}/bin:${env.PATH}"
+                    sh 'npm test'
+                }
             }
         }
 
-         stage('Publish test results and coverage') {
+        stage('Publish test units results') {
             steps {
                 script {
-                    junit '**/test-report.html'
-                    publishCobertura coberturaReportFile: '**/coverage/lcov-report/index.html'
+                    // Publicar relatórios HTML
+                    publishHTML(target: [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: './',
+                        reportFiles: 'test-report.html',
+                        reportName: 'Reports app api-jwt',
+                        reportTitles: 'The Report'
+                    ])
+
+                   
                 }
             }
         }
     }
-    
-     post {
+
+    post {
         always {
             // Limpeza ou ações pós-build
             cleanWs()
