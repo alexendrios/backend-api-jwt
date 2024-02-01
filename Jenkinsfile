@@ -53,6 +53,8 @@ pipeline {
                         reportTitles: 'The Report'
                     ])
 
+                    step([$class: 'ScoveragePublisher', reportDir: './covarate/sclover.xml', reportFile: 'clover.xml'])
+
                    
                 }
             }
