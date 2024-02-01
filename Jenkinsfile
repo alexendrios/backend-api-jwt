@@ -53,7 +53,7 @@ pipeline {
                         reportTitles: 'The Report'
                     ])
 
-                    step([$class: 'ScoveragePublisher', reportDir: './coverage/clover.xml', reportFile: 'clover.xml'])
+                    step([$class: 'ScoveragePublisher', reportDir: './coverage/', reportFile: 'clover.xml'])
 
                    
                 }
