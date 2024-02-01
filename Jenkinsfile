@@ -51,11 +51,8 @@ pipeline {
                         reportFiles: 'test-report.html',
                         reportName: 'Reports app api-jwt',
                         reportTitles: 'The Report'
-                    ])
-
-                    step([$class: 'ScoveragePublisher', reportDir: './coverage/', reportFile: 'clover.xml'])
-
-                   
+                    ]),
+                    step([$class: 'ScoveragePublisher', reportDir: 'coverage/', reportFile: 'clover.xml'])
                 }
             }
         }
