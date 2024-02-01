@@ -38,6 +38,16 @@ pipeline {
                 }
             }
         }
+          stage('Code Analysis with SonarQube') {
+            steps {
+                // Execute a análise do SonarQube
+                script {
+                    withSonarQubeEnv('SonarQube') {
+                        sh 'sonar-scanner'
+                    }
+                }
+            }
+        }
 
         stage('Publish test units results') {
             steps {
