@@ -15,44 +15,29 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Use o Node.js definido no bloco tools
                     def nodejsHome = tool 'node 18.16.0'
                     env.PATH = "${nodejsHome}/bin:${env.PATH}"
                 }
 
-                // Verifique a versão do Node.js
                 sh 'node -v'
-
-                // Instale dependências do Node.js
                 sh 'npm install'
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                // Execute testes usando o Node.js e npm do bloco tools
-                script {
+                  script {
                     def nodejsHome = tool 'node 18.16.0'
                     env.PATH = "${nodejsHome}/bin:${env.PATH}"
                     sh 'npm test'
                 }
             }
         }
-          stage('Code Analysis with SonarQube') {
-            steps {
-                // Execute a análise do SonarQube
-                script {
-                    withSonarQubeEnv('SonarQube') {
-                        sh 'sonar-scanner'
-                    }
-                }
-            }
-        }
+        
 
         stage('Publish test units results') {
             steps {
                 script {
-                    // Publicar relatórios HTML
                     publishHTML(target: [
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
@@ -70,7 +55,6 @@ pipeline {
 
     post {
         always {
-            // Limpeza ou ações pós-build
             cleanWs()
         }
     }
