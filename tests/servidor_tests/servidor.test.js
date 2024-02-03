@@ -20,21 +20,22 @@ describe("Server", () => {
     exitMock.mockRestore();
   });
 
-  test("deve inicializar o servidor", async () => {
+  test("Deve inicializar o servidor Test", async () => {
     expect(typeof server).toBe("object");
   });
 
-  test("deve ter rotas configuradas", async () => {
+  test("Deve ter rotas configuradas", async () => {
     const routes = server.table();
     expect(routes).toHaveLength(6);
   });
 
-  test("deve iniciar o servidor", async () => {
-    const startedServer = await serverModule.start();
+  test("Deve iniciar o servidor api", async () => {
+    let startedServer = await serverModule.start();
+    console.log(startedServer);
     expect(typeof startedServer).toBe("object");
   });
 
-  test("deve lidar com um erro não tratado corretamente", () => {
+  test("Deve lidar com um erro não tratado corretamente", () => {
     const mockError = new Error("Erro não tratado");
     serverModule.handleUnhandledRejection(mockError);
     expect(handleUnhandledRejectionMock).toHaveBeenCalledWith(mockError);

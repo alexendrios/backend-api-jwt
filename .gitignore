@@ -1,2 +1,9 @@
 node_modules/
-data/*
+data/
+backend/
+reports/
+coverage/
+logs_Service/
+*.log
+*.html
+

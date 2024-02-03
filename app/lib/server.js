@@ -9,7 +9,9 @@ const {
   shutdownHandler,
 } = require("./trace"); 
 
-
+require("dotenv").config();
+const serverPort = process.env.PORT || 4000;
+const testPort = process.env.TEST_PORT || 5000;
 
 const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics({ timeout: 3000 });
@@ -17,7 +19,7 @@ configureOpenTelemetry();
 
 
 const server = Hapi.server({
-  port: 4000,
+  port: process.env.NODE_ENV === "test" ? testPort : serverPort,
   host: "0.0.0.0",
   routes: {
     cors: {
