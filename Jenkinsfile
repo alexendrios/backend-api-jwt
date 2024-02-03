@@ -1,11 +1,15 @@
 pipeline {
-    agent any
+    agent none
+
+    tools {
+        nodejs "node" 
+    }
 
     stages {
         stage('Pull Docker Image') {
             steps {
                 script {
-                    docker.image('node').pull()
+                    docker.image("node").pull()
                 }
             }
         }
@@ -19,14 +23,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    def nodejsHome = tool 'node'
-                    env.PATH = "${nodejsHome}/bin:${env.PATH}"
-
-
-                    dir("/var/jenkins_home/workspace/test") {
-                        sh 'node -v'
-                        sh 'npm install'
-                    }
+                    // Node.js já está disponível no PATH devido à configuração da ferramenta
+                    sh 'node -v'
+                    sh 'npm install'
                 }
             }
         }
@@ -34,15 +33,8 @@ pipeline {
         stage('Run Unit Tests and Generate Code Coverage') {
             steps {
                 script {
-                    def customImage = docker.image('node')
-                    customImage.inside {
-                        sh 'cd /var/jenkins_home/workspace/test'
-
-                        def nodejsHome = tool 'node'
-                        env.PATH = "${nodejsHome}/bin:${env.PATH}"
-                        sh 'npm test'
-                        sh 'mv coverage/lcov-report/index.html coverage/lcov-report/test-report.html'
-                    }
+                    sh 'npm test'
+                    sh 'mv coverage/lcov-report/index.html coverage/lcov-report/test-report.html'
                 }
             }
         }
