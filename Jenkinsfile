@@ -34,8 +34,8 @@ pipeline {
                 script {
                     docker.image("node").inside {
                         sh 'npm test'
-                        sh 'mv coverage/lcov-report/index.html coverage/lcov-report/test-report.html'
-                        sh 'mv coverage/coverage-final.json coverage/test-coverage.json'
+                        sh 'mv coverage/lcov-report/index.html coverage/lcov-report/index.html'
+                        sh 'mv coverage/coverage-final.json coverage/coverage-final.json'
                     }
                 }
             }
@@ -45,16 +45,17 @@ pipeline {
             steps {
                 script {
                     // Publique os relatórios JUnit e HTML
-                    junit checksName: 'Test Report', testResults: 'coverage/lcov-report/*.xml'
+                    
                     publishHTML(target: [
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
-                        reportDir: 'coverage/lcov-report',
-                        reportFiles: 'test-report.html',
+                        reportDir: 'coverage/lcov-report/',
+                        reportFiles: 'index.html',
                         reportName: 'Reports app api-jwt',
                         reportTitles: 'The Report'
                     ])
+                    junit checksName: 'Test Report', testResults: 'coverage/lcov-report/*.xml'
                 }
           }
        }
