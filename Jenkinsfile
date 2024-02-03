@@ -53,6 +53,7 @@ pipeline {
                         reportTitles: 'The Report'
                     ])
                 }
+                junit checksName: 'Test Report', stdioRetention: '', testResults: 'reports/report.xml'
             }
         }
     }
