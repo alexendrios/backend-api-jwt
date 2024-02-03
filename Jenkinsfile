@@ -52,7 +52,7 @@ pipeline {
                             reportName: 'Reports app api-jwt',
                             reportTitles: 'The Report'
                         ])
-                        junit checksName: 'report', stdioRetention: true, testResults: './reports/*.xml'
+                        junit checksName: 'Test Report', stdioRetention: true, testResults: 'reports/**/*.xml'
                     }
                 }
        }
