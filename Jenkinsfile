@@ -1,11 +1,15 @@
 pipeline {
     agent any
 
-    docker {
-        image "node"
-    }
-
     stages {
+        stage('Pull Docker Image') {
+            steps {
+                script {
+                    docker.image('node').pull()
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/alexendrios/backend-api-jwt.git']]])
@@ -15,22 +19,29 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    def nodejsHome = tool 'node'
-                    env.PATH = "${nodejsHome}/bin:${env.PATH}"
-                }
+                    def customImage = docker.image('node')
+                        customImage.inside {
+                        sh 'cd /var/jenkins_home/workspace/test'
 
-                sh 'node -v'
-                sh 'npm install'
+                        sh 'node -v'
+                        sh 'npm install'
+                    }
+                }
             }
         }
 
         stage('Run Unit Tests and Generate Code Coverage') {
             steps {
                 script {
-                    def nodejsHome = tool 'node'
-                    env.PATH = "${nodejsHome}/bin:${env.PATH}"
-                    sh 'npm test'
-                    sh 'mv coverage/lcov-report/index.html coverage/lcov-report/test-report.html'
+                    def customImage = docker.image('node')
+                    customImage.inside {
+                        sh 'cd /var/jenkins_home/workspace/test'
+
+                        def nodejsHome = tool 'node'
+                        env.PATH = "${nodejsHome}/bin:${env.PATH}"
+                        sh 'npm test'
+                        sh 'mv coverage/lcov-report/index.html coverage/lcov-report/test-report.html'
+                    }
                 }
             }
         }
@@ -49,28 +60,6 @@ pipeline {
                     ])
                 }
             }
-        }
-
-        stage('Publish Code Coverage Report') {
-            steps {
-                script {
-                    publishHTML(target: [
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'coverage/lcov-report',
-                        reportFiles: 'index.html',
-                        reportName: 'Coverage Report',
-                        reportTitles: 'Code Coverage'
-                    ])
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            cleanWs()
         }
     }
 }
