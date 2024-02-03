@@ -1,14 +1,11 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs "node" 
-    }
-
     stages {
         stage('Pull Docker Image') {
             steps {
                 script {
+                    // Use a imagem oficial do Node.js
                     docker.image("node").pull()
                 }
             }
@@ -23,9 +20,11 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Node.js já está disponível no PATH devido à configuração da ferramenta
-                    sh 'node -v'
-                    sh 'npm install'
+                    // Use o Docker para executar os comandos node e npm
+                    docker.image("node").inside {
+                        sh 'node -v'
+                        sh 'npm install'
+                    }
                 }
             }
         }
@@ -33,8 +32,10 @@ pipeline {
         stage('Run Unit Tests and Generate Code Coverage') {
             steps {
                 script {
-                    sh 'npm test'
-                    sh 'mv coverage/lcov-report/index.html coverage/lcov-report/test-report.html'
+                    docker.image("node").inside {
+                        sh 'npm test'
+                        sh 'mv coverage/lcov-report/index.html coverage/lcov-report/test-report.html'
+                    }
                 }
             }
         }
