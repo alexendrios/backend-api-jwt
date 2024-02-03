@@ -35,26 +35,28 @@ pipeline {
                     docker.image("node").inside {
                         sh 'npm test'
                         sh 'mv coverage/lcov-report/index.html coverage/lcov-report/test-report.html'
+                        sh 'mv coverage/coverage-final.json coverage/test-coverage.json'
                     }
                 }
             }
         }
 
-            stage('Publish Test Reports') {
-                steps {
-                    script {
-                        publishHTML(target: [
-                            allowMissing: false,
-                            alwaysLinkToLastBuild: true,
-                            keepAll: true,
-                            reportDir: './', // ou 'test-results'
-                            reportFiles: 'test-report.html',
-                            reportName: 'Reports app api-jwt',
-                            reportTitles: 'The Report'
-                        ])
-                        junit checksName: 'Test Report', stdioRetention: true, testResults: 'reports/**/*.xml'
-                    }
+        stage('Publish Test Reports') {
+            steps {
+                script {
+                    // Publique os relatórios JUnit e HTML
+                    junit checksName: 'Test Report', testResults: 'coverage/lcov-report/*.xml'
+                    publishHTML(target: [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'coverage/lcov-report',
+                        reportFiles: 'test-report.html',
+                        reportName: 'Reports app api-jwt',
+                        reportTitles: 'The Report'
+                    ])
                 }
+          }
        }
     }
 }
