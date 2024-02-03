@@ -19,10 +19,11 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    def customImage = docker.image('node')
-                        customImage.inside {
-                        sh 'cd /var/jenkins_home/workspace/test'
+                    def nodejsHome = tool 'node'
+                    env.PATH = "${nodejsHome}/bin:${env.PATH}"
 
+
+                    dir("/var/jenkins_home/workspace/test") {
                         sh 'node -v'
                         sh 'npm install'
                     }
