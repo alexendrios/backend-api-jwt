@@ -40,21 +40,21 @@ pipeline {
             }
         }
 
-        stage('Publish Test Reports') {
-            steps {
-                script {
-                    publishHTML(target: [
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: './',
-                        reportFiles: 'test-report.html',
-                        reportName: 'Reports app api-jwt',
-                        reportTitles: 'The Report'
-                    ])
+            stage('Publish Test Reports') {
+                steps {
+                    script {
+                        publishHTML(target: [
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: true,
+                            keepAll: true,
+                            reportDir: './', // ou 'test-results'
+                            reportFiles: 'test-report.html',
+                            reportName: 'Reports app api-jwt',
+                            reportTitles: 'The Report'
+                        ])
+                        junit checksName: 'report', stdioRetention: true, testResults: './reports/*.xml'
+                    }
                 }
-                junit checksName: 'Test Report', stdioRetention: '', testResults: 'reports/report.xml'
-            }
-        }
+       }
     }
 }
