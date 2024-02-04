@@ -38,32 +38,15 @@ pipeline {
                 }
             }
         }
-
-        stage('Publish Test Reports') {
+        stage('Deploy') {
             steps {
-                script {                   
-                    publishHTML(target: [
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: '/',
-                        reportFiles: '*.html',
-                        reportName: 'Reports app api-jwt',
-                        reportTitles: 'The Report'
-                    ])
+                script {
+                    docker.image("node").inside {
+                        echo "Aplicativo pronto para uso"
+                        sh 'npm start'
+                    }
                 }
-                // script {                   
-                //     publishHTML(target: [
-                //         allowMissing: false,
-                //         alwaysLinkToLastBuild: true,
-                //         keepAll: true,
-                //         reportDir: '/coverage/lcov-report/',
-                //         reportFiles: '*.html',
-                //         reportName: 'Cobertura de Testes',
-                //         reportTitles: 'Code Coverage'
-                //     ])
-                // }
-          }
-       }
+            }
+        }
     }
 }
