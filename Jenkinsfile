@@ -41,28 +41,28 @@ pipeline {
 
         stage('Publish Test Reports') {
             steps {
-                // script {                   
-                //     publishHTML(target: [
-                //         allowMissing: false,
-                //         alwaysLinkToLastBuild: true,
-                //         keepAll: true,
-                //         reportDir: '/',
-                //         reportFiles: '*.html',
-                //         reportName: 'Reports app api-jwt',
-                //         reportTitles: 'The Report'
-                //     ])
-                // }
                 script {                   
                     publishHTML(target: [
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
-                        reportDir: '/coverage/lcov-report/',
+                        reportDir: '/',
                         reportFiles: '*.html',
-                        reportName: 'Cobertura de Testes',
-                        reportTitles: 'Code Coverage'
+                        reportName: 'Reports app api-jwt',
+                        reportTitles: 'The Report'
                     ])
                 }
+                // script {                   
+                //     publishHTML(target: [
+                //         allowMissing: false,
+                //         alwaysLinkToLastBuild: true,
+                //         keepAll: true,
+                //         reportDir: '/coverage/lcov-report/',
+                //         reportFiles: '*.html',
+                //         reportName: 'Cobertura de Testes',
+                //         reportTitles: 'Code Coverage'
+                //     ])
+                // }
           }
        }
     }
