@@ -41,17 +41,17 @@ pipeline {
 
         stage('Publish Test Reports') {
             steps {
-                script {                   
-                    publishHTML(target: [
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: '/',
-                        reportFiles: '*.html',
-                        reportName: 'Reports app api-jwt',
-                        reportTitles: 'The Report'
-                    ])
-                }
+                // script {                   
+                //     publishHTML(target: [
+                //         allowMissing: false,
+                //         alwaysLinkToLastBuild: true,
+                //         keepAll: true,
+                //         reportDir: '/',
+                //         reportFiles: '*.html',
+                //         reportName: 'Reports app api-jwt',
+                //         reportTitles: 'The Report'
+                //     ])
+                // }
                 script {                   
                     publishHTML(target: [
                         allowMissing: false,
