@@ -41,9 +41,10 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    docker.image("node").inside {
+                    docker.image("node").inside {   
+                        sh 'npm start & sleep 3 && pkill -f "npm start"'
                         echo "Aplicativo pronto para uso"
-                        sh 'npm start'
+                        
                     }
                 }
             }
