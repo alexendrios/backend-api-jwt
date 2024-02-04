@@ -52,14 +52,12 @@ pipeline {
                         reportTitles: 'The Report'
                     ])
                 }
-          }
-          steps {
                 script {                   
                     publishHTML(target: [
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
-                        reportDir: '/coverage/lcov-report/*.html',
+                        reportDir: '/coverage/lcov-report/',
                         reportFiles: '*.html',
                         reportName: 'Cobertura de Testes',
                         reportTitles: 'Code Coverage'
