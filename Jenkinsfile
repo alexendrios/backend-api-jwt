@@ -34,8 +34,6 @@ pipeline {
                 script {
                     docker.image("node").inside {
                         sh 'npm test'
-                        sh 'mv coverage/lcov-report/*.html'
-                        sh 'mv coverage/*.json'
                     }
                 }
             }
@@ -43,9 +41,7 @@ pipeline {
 
         stage('Publish Test Reports') {
             steps {
-                script {
-                    // Publique os relatórios JUnit e HTML
-                    
+                script {                   
                     publishHTML(target: [
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
@@ -55,7 +51,19 @@ pipeline {
                         reportName: 'Reports app api-jwt',
                         reportTitles: 'The Report'
                     ])
-                    junit checksName: 'Test de Cobertura', testResults: 'coverage/*.xml'
+                }
+          }
+          steps {
+                script {                   
+                    publishHTML(target: [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: '/coverage/lcov-report/*.html',
+                        reportFiles: '*.html',
+                        reportName: 'Cobertura de Testes',
+                        reportTitles: 'Code Coverage'
+                    ])
                 }
           }
        }
