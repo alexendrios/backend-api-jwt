@@ -34,6 +34,7 @@ pipeline {
                 script {
                     docker.image("node").inside {
                         sh 'npm test'
+                        junit 'reports/report.xml'
                     }
                 }
             }
